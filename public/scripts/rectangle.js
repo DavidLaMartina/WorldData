@@ -1,3 +1,7 @@
+/*
+ * Credit to https://github.com/thegisdev/mapbox-gl-draw-rectangle-mode
+ *  Module pulled and converted to regular client-side JS script
+ */
 
 var doubleClickZoom = {
   enable: function enable(ctx) {

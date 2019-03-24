@@ -24,7 +24,10 @@ map.addControl(draw);
 //   console.log(e.features);
 // })
 
-map.on('draw.create', updateArea);
+map.on('draw.create', function(e){
+  getData(e.features[0]);
+})
+// map.on('draw.create', updateArea);
 map.on('draw.delete', updateArea);
 map.on('draw.update', updateArea);
 
@@ -40,4 +43,32 @@ function updateArea(e) {
     answer.innerHTML = '';
     if (e.type !== 'draw.delete') alert("Use the draw tools to draw a polygon!");
   }
+}
+
+function getData(geoJSON){
+  var coords = geoJSON.geometry.coordinates.flat();
+  var settings = {
+    "async": true,
+    "crossDomain": true,
+    "url": "https://geoenrich.arcgis.com/arcgis/rest/services/World/geoenrichmentserver/GeoEnrichment/enrich",
+    "method": "POST",
+      "headers": {
+        "content-type": "application/x-www-form-urlencoded",
+        "accept": "application/json"
+    },
+    "data": {
+  		"f": "json",
+      "token": "bc_hr2H5pyQ2GQ0Vnnd2xia0EbDcLYGr1Z2EQ1QtYo9XNdHYhzEpp2kpO0yXDSvj6NnMpxuxQXLSY2WzJNAyVlYcPXFzi5ww_9rgba_aZSuA8taJi3ewcXJJuNG9dPM_pdskUpkJ43Rg1fZkwDF9Cw..",
+      "inSR": "4326",
+      "outSR": "4326",
+      "returnGeometry": "true",
+      "studyAreas": `[{\"geometry\":{\"rings\":[${JSON.stringify(coords)}],\"spatialReference\":{\"wkid\":4326}},\"attributes\":{\"id\":\"1\",\"name\":\"optional polygon area name\"}}]`,
+      "studyAreasOptions": "{\n  \"areaType\":\"RingBuffer\",\n  \"bufferUnits\":\"esriMiles\",\n  \"bufferRadii\":[1]\n}",
+      "dataCollections": "[\"KeyGlobalFacts\"]"
+    }
+  }
+  $.ajax(settings)
+    .done(function (response) {
+      console.log(JSON.parse(response));
+  });
 }
