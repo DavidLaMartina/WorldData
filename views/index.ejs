@@ -1,5 +1,33 @@
 <% include partials/header %>
 
-<h1>"You're at the index page!"</h1>
+<div class='container-fluid'>
+  <div class='row' id='map-row'>
+    <div class='col-xl-8' id='map-container'>
+      <div id='map'></div>
+      <div class='calculation-box'>
+        <!-- <p>Draw a polygon using the draw tools.</p> -->
+        <div id='calculated-area'></div>
+      </div>
+    </div>
 
+    <div class='col-xl-4 container-fluid'>
+      <div class='row'>
+        <h1>World Data</h1>
+      </div>
+      <div class='row'>
+        row 2
+      </div>
+      <div class='row'>
+        row 2
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Mapbox draw and turf  -->
+<script src='https://api.tiles.mapbox.com/mapbox.js/plugins/turf/v3.0.11/turf.min.js'></script>
+<script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.9/mapbox-gl-draw.js'></script>
+<link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.9/mapbox-gl-draw.css' type='text/css'/>
+<script src='/scripts/rectangle.js'></script>
+<script src="/scripts/app.js"></script>
 <% include partials/footer %>

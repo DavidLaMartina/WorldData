@@ -1,0 +1,27 @@
+html, body, .container-fluid, #map-row{
+  height: 100%;
+  padding-left: 0 !important;
+}
+#map-container{
+  height: 100%;
+}
+#map{
+  padding: 0;
+  height: 100%;
+  margin: 0;
+}
+.calculation-box {
+height: 75px;
+width: 150px;
+position: absolute;
+bottom: 40px;
+left: 10px;
+background-color: rgba(255, 255, 255, .9);
+padding: 15px;
+text-align: center;
+}
+p {
+font-family: 'Open Sans';
+margin: 0;
+font-size: 13px;
+}
