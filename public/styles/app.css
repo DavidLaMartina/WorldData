@@ -1,5 +1,7 @@
 html, body, .container-fluid, #map-row{
   height: 100%;
+}
+html, body, #map-container, #map-row{
   padding-left: 0 !important;
 }
 #map-container{
@@ -10,6 +12,9 @@ html, body, .container-fluid, #map-row{
   height: 100%;
   margin: 0;
 }
+/* #plot-container{
+  margin: 10px;
+} */
 .calculation-box {
 height: 75px;
 width: 150px;
@@ -25,3 +30,26 @@ font-family: 'Open Sans';
 margin: 0;
 font-size: 13px;
 }
+svg {
+  margin: 0 auto;
+  display: block;
+}
+.tick line{
+  stroke: #ccc;
+  stroke-dasharray: 10, 5;
+}
+#buttons{
+  margin-top: 25%;
+}
+#buttons > .container{
+  margin: 10px;
+}
+/* #button-container{
+  margin: 0 auto;
+}
+#button-row{
+  padding: 20px;
+} */
+/* #plot-button{
+  margin-top: 50%;
+} */

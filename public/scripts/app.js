@@ -1,3 +1,11 @@
+var plotData = {};
+plotData.data = [];
+
+$(document).ready(function(){
+  addRecentEvents();
+  addDataSelections();
+})
+
 mapboxgl.accessToken = 'pk.eyJ1IjoiZGxhbWFydGluYSIsImEiOiJjanRsa3V6ZjAwOTljM3lvamwzeTE2bmp2In0.o8FGySTUwN0IG1NOcL3HKg';
 var map = new mapboxgl.Map({
   container: 'map',
@@ -64,11 +72,72 @@ function getData(geoJSON){
       "returnGeometry": "true",
       "studyAreas": `[{\"geometry\":{\"rings\":[${JSON.stringify(coords)}],\"spatialReference\":{\"wkid\":4326}},\"attributes\":{\"id\":\"1\",\"name\":\"optional polygon area name\"}}]`,
       "studyAreasOptions": "{\n  \"areaType\":\"RingBuffer\",\n  \"bufferUnits\":\"esriMiles\",\n  \"bufferRadii\":[1]\n}",
-      "dataCollections": "[\"KeyGlobalFacts\"]"
+      "dataCollections": "[\"KeyGlobalFacts\", \"KeyFacts\", KeyUSFacts]"
+      // "analysisVariables": "[\"KeyGlobalFacts.AVGHHSIZE\", \"AtRisk.AVGHINC_CY\", \"DaytimePopulation_DROP_CY\", \"AtRisk.MP27002A_B\"]"
     }
   }
   $.ajax(settings)
     .done(function (response) {
-      console.log(JSON.parse(response));
-  });
+      return response;
+  })
+  .then(function(data){
+    var siteData = JSON.parse(data).results[0].value.FeatureSet[0].features;
+    var keySets = getSelections();
+    var dataTotals = {};
+    var currentData = 0;
+
+    for (let keySet in keySets){
+      dataTotals[keySet] = 0;
+      for (let site of siteData){
+        for (let key of keySets[keySet]){
+          if (site.attributes[key]){
+            currentData = site.attributes[key];
+            break;
+          }
+          currentData = 0;
+        }
+        dataTotals[keySet] += currentData;
+      }
+    }
+    updateRecent(dataTotals);
+    plotData.data.push(dataTotals);
+    console.log(plotData);
+  })
+}
+function plotData(){
+  
+}
+function addDataSelections(){
+  for (let menu of $('#selection-container').find('select')){
+    for (let data in dataVars){
+      $(menu).append($('<option>', {
+        value: data,
+        text: dataVars[data].name
+      }));
+    }
+  }
+}
+function addRecentEvents(){
+  var selects = $('#selection-container').find('select');
+  var displays = $('#recent-container').find('.recent-text');
+  for (let i = 0; i < selects.length; i++){
+    $(selects[i]).change(function(){
+      var optionSelected = $(this).find('option:selected');
+      $(displays[i]).text(optionSelected.text());
+    })
+  }
+}
+function getSelections(){
+  var keySets = {}
+  keySets['x'] = dataVars[$('#x-select').find('option:selected').val()].keys;
+  keySets['y'] = dataVars[$('#y-select').find('option:selected').val()].keys;
+  keySets['rad'] = dataVars[$('#rad-select').find('option:selected').val()].keys;
+  keySets['color'] = dataVars[$('#color-select').find('option:selected').val()].keys;
+  return keySets
+}
+function updateRecent(recentData){
+  $('#x-data').text(recentData['x']);
+  $('#y-data').text(recentData['y']);
+  $('#rad-data').text(recentData['rad']);
+  $('#color-data').text(recentData['color']);
 }

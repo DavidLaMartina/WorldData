@@ -1,6 +1,6 @@
 <% include partials/header %>
 
-<div class='container-fluid'>
+<div id='page-container' class='container-fluid'>
   <div class='row' id='map-row'>
     <div class='col-xl-8' id='map-container'>
       <div id='map'></div>
@@ -10,15 +10,83 @@
       </div>
     </div>
 
-    <div class='col-xl-4 container-fluid'>
+    <div id='data-container' class='col-xl-4 container-fluid'>
       <div class='row'>
-        <h1>World Data</h1>
+        <div class='col-md-8'>
+          <div class='row'>
+            <h1>World Data</h1>
+          </div>
+          <div class='row'>
+            <ol>
+              <li>Select the datum you want to plot.</li>
+              <li>Drag and drop rectangles to select your areas.</li>
+              <li>Press "Plot" to view your results.</li>
+            </ol>
+          </div>
+        </div>
+        <div id='button-row' class='col-md-4'>
+          <div id='buttons' class='container'>
+            <div class='container'>
+              <button id='lock-button' type="button" class="btn btn-primary">LOCK</button>
+            </div>
+            <div class='container'>
+              <button id='plot-button' type="button" class="btn btn-primary">PLOT</button>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class='row'>
-        row 2
+      <div id='selection-container' class='row'>
+        <div class='col-md-2'>
+          <p>X-axis</p>
+        </div>
+        <div id='x-select' class='col-md-10'>
+          <select class='custom-select my-1 mr-sm-2'>
+          </select>
+        </div>
+        <div class='col-md-2'>
+          <p>Y-axis</p>
+        </div>
+        <div id='y-select' class='col-md-10'>
+          <select class='custom-select my-1 mr-sm-2'>
+          </select>
+        </div>
+        <div class='col-md-2'>
+          <p>Radius</p>
+        </div>
+        <div id='rad-select' class='col-md-10'>
+          <select class='custom-select my-1 mr-sm-2'>
+          </select>
+        </div>
+        <div class='col-md-2'>
+          <p>Color</p>
+        </div>
+        <div id='color-select' class='col-md-10'>
+          <select class='custom-select my-1 mr-sm-2'>
+          </select>
+        </div>
       </div>
-      <div class='row'>
-        row 2
+      <div id='plot-container' class='row'>
+        <svg
+          preserveAspectRatio="xMidYMid meet"
+          version="1.1"
+          baseProfile="full"
+          xmlns="http://www.w3.org/2000/svg" >
+        </svg>
+      </div>
+      <div id='recent-container' class='row'>
+        <div class='container'>
+          <div class='row'>
+            <h4>Recent Selection</h4>
+          </div>
+          <div class='row'>
+            <ul>
+              <li><p class='recent-text' id='recent-1'></p><p id='x-data'></p></li>
+              <li><p class='recent-text' id='recent-2'></p><p id='y-data'></p></li>
+              <li><p class='recent-text' id='recent-3'></p><p id='rad-data'></p></li>
+              <li><p class='recent-text' id='recent-4'></p><p id='color-data'></p></li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -28,7 +96,10 @@
 <script src='https://api.tiles.mapbox.com/mapbox.js/plugins/turf/v3.0.11/turf.min.js'></script>
 <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.9/mapbox-gl-draw.js'></script>
 <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.9/mapbox-gl-draw.css' type='text/css'/>
-<script src='/scripts/bbox.js'></script>
+<!-- <script src='/scripts/bbox.js'></script> -->
+<script src="https://d3js.org/d3.v4.js"></script>
 <script src='/scripts/rectangle.js'></script>
+<script src='/scripts/dataVars.js'></script>
 <script src="/scripts/app.js"></script>
+<script src='/scripts/plot.js'></script>
 <% include partials/footer %>
