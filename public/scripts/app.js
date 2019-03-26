@@ -1,9 +1,53 @@
 var plotData = {};
 plotData.data = [];
+var rememberRecents = null;
+
+// var testData = {};
+// testData.xText = "Here is the x-axis";
+// testData.yText = "Here is the y-axis";
+// testData.radText = "Radius text";
+// testData.colorText = "Color text";
+// testData.data = [
+//   {
+//     'x': 5,
+//     'y': 11,
+//     'rad': 15,
+//     'color': 12
+//   },
+//   {
+//     'x': 10,
+//     'y': 3,
+//     'rad': 90,
+//     'color': 115
+//   },
+//   {
+//     'x': 15,
+//     'y': 7,
+//     'rad': 10,
+//     'color': 56
+//   },
+//   {
+//     'x': 20,
+//     'y': 9,
+//     'rad': 50,
+//     'color': 78
+//   },
+//   {
+//     'x': 25,
+//     'y': 5,
+//     'rad': 75,
+//     'color': 2
+//   }
+// ];
 
 $(document).ready(function(){
   addRecentEvents();
   addDataSelections();
+  setLockButton();
+  setPlotButton();
+  setResetButton();
+  enableLockButton();
+  disablePlotButton();
 })
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiZGxhbWFydGluYSIsImEiOiJjanRsa3V6ZjAwOTljM3lvamwzeTE2bmp2In0.o8FGySTUwN0IG1NOcL3HKg';
@@ -34,6 +78,7 @@ map.addControl(draw);
 
 map.on('draw.create', function(e){
   getData(e.features[0]);
+  updateArea(e);
 })
 // map.on('draw.create', updateArea);
 map.on('draw.delete', updateArea);
@@ -45,8 +90,8 @@ function updateArea(e) {
   if (data.features.length > 0) {
     var area = turf.area(data);
     // restrict to area to 2 decimal points
-    var rounded_area = Math.round(area*100)/100;
-    answer.innerHTML = '<p><strong>' + rounded_area + '</strong></p><p>square meters</p>';
+    var rounded_area = Math.floor(Math.round(area*100)/100 / 1000000);
+    answer.innerHTML = '<p><strong>' + rounded_area + '</strong></p><p>square kilometers</p>';
   } else {
     answer.innerHTML = '';
     if (e.type !== 'draw.delete') alert("Use the draw tools to draw a polygon!");
@@ -104,9 +149,6 @@ function getData(geoJSON){
     console.log(plotData);
   })
 }
-function plotData(){
-  
-}
 function addDataSelections(){
   for (let menu of $('#selection-container').find('select')){
     for (let data in dataVars){
@@ -140,4 +182,39 @@ function updateRecent(recentData){
   $('#y-data').text(recentData['y']);
   $('#rad-data').text(recentData['rad']);
   $('#color-data').text(recentData['color']);
+}
+function setLockButton(){
+  $('#lock-button').on('click', function(){
+    $('.custom-select').attr('disabled', true);
+    plotData.xText = $('#x-select').find('option:selected').text();
+    plotData.yText = $('#y-select').find('option:selected').text();
+    plotData.radText = $('#rad-select').find('option:selected').text();
+    plotData.colorText = $('#color-select').find('option:selected').text();
+    disableLockButton();
+    enablePlotButton();
+  })
+}
+function setPlotButton(){
+  $('#plot-button').on('click', function(){
+    rememberRecents = plot(plotData);
+    disablePlotButton();
+  });
+}
+function enableLockButton(){$('#lock-button').attr('disabled', false)}
+function disableLockButton(){$('#lock-button').attr('disabled', true)}
+function enablePlotButton(){$('#plot-button').attr('disabled', false)}
+function disablePlotButton(){$('#plot-button').attr('disabled', true)}
+
+function setResetButton(){
+  $('#reset-button').on('click', function(){
+    if($('#plot').length){
+      $('#plot').replaceWith(rememberRecents);
+      rememberRecents = null;
+    }
+    enableLockButton();
+    $('.custom-select').attr('disabled', false);
+
+    plotData = {};
+    plotData.data = [];
+  })
 }

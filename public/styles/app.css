@@ -31,18 +31,24 @@ margin: 0;
 font-size: 13px;
 }
 svg {
-  margin: 0 auto;
+  margin: 0;
   display: block;
 }
 .tick line{
   stroke: #ccc;
   stroke-dasharray: 10, 5;
 }
+.disabled-button{
+  background-color: #A0A0A0;
+}
 #buttons{
   margin-top: 25%;
 }
 #buttons > .container{
   margin: 10px;
+}
+#recent-container{
+  margin-top: 10px;
 }
 /* #button-container{
   margin: 0 auto;
