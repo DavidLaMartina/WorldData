@@ -47,7 +47,7 @@ function updateArea(e) {
   if (data.features.length > 0) {
     var area = turf.area(data);
     var rounded_area = Math.floor(Math.round(area*100)/100 / 1000000);
-    answer.innerHTML = '<p><strong>' + rounded_area + '</strong></p><p>square kilometers</p>';
+    answer.innerHTML = '<p class="calculation"><strong>' + rounded_area + '</strong></p><p class="calculation">square kilometers</p>';
   } else {
     answer.innerHTML = '';
     if (e.type !== 'draw.delete') alert("Use the draw tools to draw a polygon!");
@@ -120,8 +120,7 @@ function addRecentEvents(){
   var displays = $('#recent-container').find('.recent-text');
   for (let i = 0; i < selects.length; i++){
     $(selects[i]).change(function(){
-      var optionSelected = $(this).find('option:selected');
-      $(displays[i]).text(optionSelected.text());
+      updateRecentText();
     })
   }
 }
@@ -130,7 +129,7 @@ function updateRecentText(){
   var displays = $('#recent-container').find('.recent-text');
   for (let i = 0; i < selects.length; i++){
     var optionSelected = $(selects[i]).find('option:selected');
-    $(displays[i]).text(optionSelected.text());
+    $(displays[i]).text(optionSelected.text() + ': ');
   }
 }
 function getSelections(){
@@ -142,10 +141,17 @@ function getSelections(){
   return keySets
 }
 function updateRecent(recentData){
-  $('#x-data').text(recentData['x']);
-  $('#y-data').text(recentData['y']);
-  $('#rad-data').text(recentData['rad']);
-  $('#color-data').text(recentData['color']);
+  if (recentData){
+    $('#x-data').text(recentData['x']);
+    $('#y-data').text(recentData['y']);
+    $('#rad-data').text(recentData['rad']);
+    $('#color-data').text(recentData['color']);
+  }else{
+    $('#x-data').text('');
+    $('#y-data').text('');
+    $('#rad-data').text('');
+    $('#color-data').text('');
+  }
 }
 function setLockButton(){
   $('#lock-button').on('click', function(){
@@ -163,7 +169,6 @@ function setPlotButton(){
   $('#plot-button').on('click', function(){
     rememberRecents = plot(plotData);
     disablePlotButton();
-    map.removeControl(draw);
   });
 }
 function setResetButton(){
@@ -176,7 +181,7 @@ function setResetButton(){
     $('.custom-select').attr('disabled', false);
     draw.deleteAll();
     map.removeControl(draw);
-
+    updateRecent();
     plotData = {};
     plotData.data = [];
   })
