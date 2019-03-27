@@ -43,11 +43,11 @@ var dataVars = {
     name: "Purchasing power index"
   },
   income: {
-    keys: ['AVGHINC_CY'],
-    name: "Income"
+    keys: ['AVGHINC_CY', ],
+    name: "Average Household Income"
   },
   education: {
-    keys: ['EDUC05_CY'],
-    name: "Education"
+    keys: ['EDUC06_CY', 'BACHDEG_CY'],
+    name: "Post-secondary Education"
   }
 };

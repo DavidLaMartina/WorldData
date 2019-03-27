@@ -14,6 +14,39 @@
       <div class='row'>
         <div class='col-md-8'>
           <div class='row'>
+            <h1>World Data</h1>
+          </div>
+          <div class='row'>
+            <ol>
+              <li>Select the datum you want to plot.</li>
+              <li>Drag and drop rectangles to select your areas.</li>
+              <li>Press "Plot" to view your results.</li>
+            </ol>
+          </div>
+        </div>
+        <div id='buttons-container' class='col-md-4'>
+          <div class='row'>
+            <div class='container'>
+              <button id='reset-button' type="button" class="btn btn-primary">RESET</button>
+            </div>
+          </div>
+          <div class='row'>
+            <div class='container'>
+              <button id='lock-button' type="button" class="btn btn-primary">LOCK</button>
+            </div>
+          </div>
+          <div class='row'>
+            <div class='container'>
+              <button id='plot-button' type="button" class="btn btn-primary">PLOT</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- <div class='row'>
+        <div class='col-md-8'>
+          <div class='row'>
             <div class='col-md-8'>
               <h1>World Data</h1>
             </div>
@@ -41,7 +74,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
       <div id='selection-container' class='row'>
         <div class='col-md-2'>
           <p>X-axis</p>
@@ -87,10 +120,10 @@
           </div>
           <div class='row'>
             <ul>
-              <li><p class='recent-text' id='recent-1'></p><p id='x-data'></p></li>
-              <li><p class='recent-text' id='recent-2'></p><p id='y-data'></p></li>
-              <li><p class='recent-text' id='recent-3'></p><p id='rad-data'></p></li>
-              <li><p class='recent-text' id='recent-4'></p><p id='color-data'></p></li>
+              <li><span class='recent-text' id='recent-1'></span><span id='x-data'></span></li>
+              <li><span class='recent-text' id='recent-2'></span><span id='y-data'></span></li>
+              <li><span class='recent-text' id='recent-3'></span><span id='rad-data'></span></li>
+              <li><span class='recent-text' id='recent-4'></span><span id='color-data'></span></li>
             </ul>
           </div>
         </div>

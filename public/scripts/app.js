@@ -2,47 +2,10 @@ var plotData = {};
 plotData.data = [];
 var rememberRecents = null;
 
-// var testData = {};
-// testData.xText = "Here is the x-axis";
-// testData.yText = "Here is the y-axis";
-// testData.radText = "Radius text";
-// testData.colorText = "Color text";
-// testData.data = [
-//   {
-//     'x': 5,
-//     'y': 11,
-//     'rad': 15,
-//     'color': 12
-//   },
-//   {
-//     'x': 10,
-//     'y': 3,
-//     'rad': 90,
-//     'color': 115
-//   },
-//   {
-//     'x': 15,
-//     'y': 7,
-//     'rad': 10,
-//     'color': 56
-//   },
-//   {
-//     'x': 20,
-//     'y': 9,
-//     'rad': 50,
-//     'color': 78
-//   },
-//   {
-//     'x': 25,
-//     'y': 5,
-//     'rad': 75,
-//     'color': 2
-//   }
-// ];
-
 $(document).ready(function(){
   addRecentEvents();
   addDataSelections();
+  updateRecentText();
   setLockButton();
   setPlotButton();
   setResetButton();
@@ -69,18 +32,12 @@ var draw = new MapboxDraw({
     trash: true
   }
 });
-map.addControl(draw);
-// draw.changeMode('draw_rectangle');
-
-// map.on('draw.create', function(e){
-//   console.log(e.features);
-// })
 
 map.on('draw.create', function(e){
   getData(e.features[0]);
   updateArea(e);
 })
-// map.on('draw.create', updateArea);
+map.on('draw.create', updateArea);
 map.on('draw.delete', updateArea);
 map.on('draw.update', updateArea);
 
@@ -89,7 +46,6 @@ function updateArea(e) {
   var answer = document.getElementById('calculated-area');
   if (data.features.length > 0) {
     var area = turf.area(data);
-    // restrict to area to 2 decimal points
     var rounded_area = Math.floor(Math.round(area*100)/100 / 1000000);
     answer.innerHTML = '<p><strong>' + rounded_area + '</strong></p><p>square kilometers</p>';
   } else {
@@ -117,7 +73,7 @@ function getData(geoJSON){
       "returnGeometry": "true",
       "studyAreas": `[{\"geometry\":{\"rings\":[${JSON.stringify(coords)}],\"spatialReference\":{\"wkid\":4326}},\"attributes\":{\"id\":\"1\",\"name\":\"optional polygon area name\"}}]`,
       "studyAreasOptions": "{\n  \"areaType\":\"RingBuffer\",\n  \"bufferUnits\":\"esriMiles\",\n  \"bufferRadii\":[1]\n}",
-      "dataCollections": "[\"KeyGlobalFacts\", \"KeyFacts\", KeyUSFacts]"
+      "dataCollections": "[\"KeyGlobalFacts\", \"KeyFacts\", KeyUSFacts, educationalattainment]"
       // "analysisVariables": "[\"KeyGlobalFacts.AVGHHSIZE\", \"AtRisk.AVGHINC_CY\", \"DaytimePopulation_DROP_CY\", \"AtRisk.MP27002A_B\"]"
     }
   }
@@ -169,6 +125,14 @@ function addRecentEvents(){
     })
   }
 }
+function updateRecentText(){
+  var selects = $('#selection-container').find('select');
+  var displays = $('#recent-container').find('.recent-text');
+  for (let i = 0; i < selects.length; i++){
+    var optionSelected = $(selects[i]).find('option:selected');
+    $(displays[i]).text(optionSelected.text());
+  }
+}
 function getSelections(){
   var keySets = {}
   keySets['x'] = dataVars[$('#x-select').find('option:selected').val()].keys;
@@ -192,19 +156,16 @@ function setLockButton(){
     plotData.colorText = $('#color-select').find('option:selected').text();
     disableLockButton();
     enablePlotButton();
+    map.addControl(draw);
   })
 }
 function setPlotButton(){
   $('#plot-button').on('click', function(){
     rememberRecents = plot(plotData);
     disablePlotButton();
+    map.removeControl(draw);
   });
 }
-function enableLockButton(){$('#lock-button').attr('disabled', false)}
-function disableLockButton(){$('#lock-button').attr('disabled', true)}
-function enablePlotButton(){$('#plot-button').attr('disabled', false)}
-function disablePlotButton(){$('#plot-button').attr('disabled', true)}
-
 function setResetButton(){
   $('#reset-button').on('click', function(){
     if($('#plot').length){
@@ -213,8 +174,14 @@ function setResetButton(){
     }
     enableLockButton();
     $('.custom-select').attr('disabled', false);
+    draw.deleteAll();
+    map.removeControl(draw);
 
     plotData = {};
     plotData.data = [];
   })
 }
+function enableLockButton(){$('#lock-button').attr('disabled', false)}
+function disableLockButton(){$('#lock-button').attr('disabled', true)}
+function enablePlotButton(){$('#plot-button').attr('disabled', false)}
+function disablePlotButton(){$('#plot-button').attr('disabled', true)}
